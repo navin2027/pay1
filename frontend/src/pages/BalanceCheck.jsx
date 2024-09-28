@@ -4,11 +4,13 @@ import { jwtDecode } from "jwt-decode"; // Use named import if default import do
 import { InputBox } from "../components/InputBox";
 import { Button } from "../components/Button";
 import { useNavigate } from 'react-router-dom';
+import { Appbar } from "../components/Appbar";
 
 export const BalanceCheck = () => {
     const [amt, setAmt] = useState(null); // Store balance here
     const [user, setUser] = useState(null);
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false); // New state for password visibility
     const [errorMessage, setErrorMessage] = useState(""); // For error handling
     const navigate = useNavigate(); // Add navigation hook
 
@@ -78,32 +80,53 @@ export const BalanceCheck = () => {
         }
     }
 
+    // Toggle password visibility
+    const togglePasswordVisibility = () => {
+        setShowPassword(prevShowPassword => !prevShowPassword);
+    };
+
     return (
-        <>
-            <div>PayTM App</div>
-            <div>
-                {user ? (
-                    <div>Hello {user.firstName} {user.lastName}</div>
-                ) : (
-                    <div>Hello Guest</div>
-                )}
-            </div>
-            <div>
-                <InputBox onChange={e => setPassword(e.target.value)} placeholder="your password here" label={"Enter Password to check Balance:"} />
-                <Button label={"CHECK"} onClick={handleCheckBalance} />
-                <Button label={"BACK"} onClick={() => navigate("/dashboard")} />
-            </div>
-            {amt !== null && (
-                <div>
-                    <h1>Balance: ₹{amt}</h1>
-                    {/* <Button label={"OK"} onClick={() => navigate("/dashboard")} /> */}
+        <> 
+            <div className="w-screen h-screen bg-gray-400 grid justify-center items-center">
+                <div className="bg-white p-[10px]">
+                    <Appbar />
+
+                    <div className="relative">
+                        <label className="block text-lg text-center mb-2">
+                            Enter Password to check Balance:
+                        </label>
+                        <input
+                            className="text-lg text-center border p-2 w-full"
+                            type={showPassword ? "text" : "password"}  // Toggle between text and password
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            placeholder="PASSWORD"
+                        />
+                        {/* Toggle visibility button */}
+                        <span
+                            onClick={togglePasswordVisibility}
+                            className="absolute right-3 top-3 cursor-pointer text-gray-500"
+                        >
+                            {showPassword ? "🙈" : "👁️"}
+                        </span>
+                    </div>
+
+                    <Button label={"CHECK"} onClick={handleCheckBalance} /> 
+                    <Button label={"BACK"} onClick={() => navigate("/dashboard")} />
+
+                    {amt !== null && (
+                        <div className="text-center text-2xl">
+                            <h1>Balance: ₹{amt}</h1>
+                        </div>
+                    )}
+
+                    {errorMessage && (
+                        <div className="text-center text-2xl text-red-500 uppercase">
+                            <h1>{errorMessage}</h1>
+                        </div>
+                    )}
                 </div>
-            )}
-            {errorMessage && (
-                <div>
-                    <h1>{errorMessage}</h1>
-                </div>
-            )}
+            </div>
         </>
     );
 };

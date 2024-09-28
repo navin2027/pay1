@@ -40,14 +40,16 @@ export const Appbar = () => {
 
     return (
         <>
-            <div className="">PayTM App</div>
-            <div>
+         <div className="bg-white p-[10px]">
+            <div className="text-center font-mono text-4xl">PayTM App</div>
+            <div className="text-center font-semibold pt-2">
                 {user ? (
-                    <div>Hello {user.firstName} {user.lastName}</div>
+                    <div className="font-bold text-lg italic">Hello {user.firstName} {user.lastName}</div>
                 ) : (
                     <div>Hello Guest</div>
                 )}
             </div>
+        </div>
         </>
     );
 };

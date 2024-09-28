@@ -9,18 +9,16 @@ export const Transaction = () => {
     const [transactions, setTransactions] = useState([]);
 
     useEffect(() => {
-        // Decode the token to get the logged-in user's ID
         const token = localStorage.getItem("token");
         const decodedToken = jwtDecode(token);
         const userIdFromToken = decodedToken.user_Id;
 
-        // Fetch transactions from the backend
         axios.get(
             `http://localhost:3001/api/v1/user/viewtransactions`, 
             {
-                params: { userId: userIdFromToken }, // Add userId as a query parameter
+                params: { userId: userIdFromToken }, 
                 headers: {
-                    Authorization: `Bearer ${token}` // Authorization header
+                    Authorization: `Bearer ${token}`
                 }
             }
         )
@@ -41,29 +39,43 @@ export const Transaction = () => {
 
     return (
         <>
-            <h1>Transaction History</h1>
-            <Button label={"BACK"} onClick={() => navigate("/dashboard")} />
-            <div>
-                {transactions.map((transaction, index) => {
-                    if (userIdFromToken === transaction.fromAccountId && transaction.type === "debit") {
-                        // Sent transaction
-                        return (
-                            <h3 key={index}>
-                                Sent Rs.{transaction.amount} to {transaction.toUserName} on {formatDate(transaction.transactionDate)}
-                            </h3>
-                        );
-                    } else if (userIdFromToken === transaction.toAccountId && transaction.type === "credit") {
-                        // Received transaction
-                        return (
-                            <h3 key={index}>
-                                Received Rs.{transaction.amount} from {transaction.fromUserName} on {formatDate(transaction.transactionDate)}
-                            </h3>
-                        );
-                    } else {
-                        return null;
-                    }
-                })}
+        <div className="min-h-screen bg-gray-200 flex justify-center items-center">
+            <div className="bg-white w-[80%] p-6 rounded-lg shadow-md">
+                <div className="mb-4 flex justify-between items-center">
+                    <h1 className="text-2xl font-bold text-gray-800">Transaction History</h1>
+                    <Button label={"BACK"} onClick={() => navigate("/dashboard")} />
+                </div>
+                <div className="border-t border-gray-300 mt-4 pt-4">
+                    {transactions.length > 0 ? (
+                        transactions.map((transaction, index) => {
+                            if (userIdFromToken === transaction.fromAccountId && transaction.type === "debit") {
+                                // Sent transaction
+                                return (
+                                    <div key={index} className="my-4 p-4 bg-red-100 rounded-lg">
+                                        <h3 className="text-lg font-medium text-red-600">
+                                            Sent Rs.{transaction.amount} to {transaction.toUserName} on {formatDate(transaction.transactionDate)}
+                                        </h3>
+                                    </div>
+                                );
+                            } else if (userIdFromToken === transaction.toAccountId && transaction.type === "credit") {
+                                // Received transaction
+                                return (
+                                    <div key={index} className="my-4 p-4 bg-green-100 rounded-lg">
+                                        <h3 className="text-lg font-medium text-green-600">
+                                            Received Rs.{transaction.amount} from {transaction.fromUserName} on {formatDate(transaction.transactionDate)}
+                                        </h3>
+                                    </div>
+                                );
+                            } else {
+                                return null;
+                            }
+                        })
+                    ) : (
+                        <p className="text-gray-600">No transactions found.</p>
+                    )}
+                </div>
             </div>
+        </div>
         </>
     );
 };

@@ -53,6 +53,8 @@ export const UpdatePage = () => {
 
     return (
         <>
+        <div className="w-screen h-screen bg-gray-400 grid justify-center items-center">
+            <div className="bg-white p-[10px]">
             <Heading label="UPDATE" />
             <SubHeading label={"Enter your information to UPDATE your Account"} />
             <InputBox onChange={e => setFirstName(e.target.value)} placeholder="John" label={"First Name"} />
@@ -70,6 +72,8 @@ export const UpdatePage = () => {
                     <BottomWarning label={"Do not want to UPDATE ?"} buttonText={"CANCEL"} to={"/dashboard"} />
                 </>
             )}
+            </div>
+        </div>
         </>
     );
 };

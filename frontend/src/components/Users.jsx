@@ -33,7 +33,7 @@ export const Users = () => {
 
     return (
         <>
-            <h1>Users</h1>
+            <h1 className="font-extrabold italic">Users</h1>
             <div>
                 <input onChange={e => setFilter(e.target.value)} type="text" placeholder="Search Users ... " />
             </div>
@@ -52,10 +52,10 @@ function User({ user }) {
 
     return (
         <>
-            <div>
+            <div className="font-bold italic">
                 {firstNameInitial}
             </div>
-            <div>
+            <div className="italic">
                 {/* Fallback if firstName or lastName is not available */}
                 {user.firstName ? `${user.firstName} ${user.lastName}` : "Name not available"}
             </div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { Button } from "../components/Button";
 import { useNavigate } from "react-router-dom";
+import { Heading } from "../components/Heading";
 
 export const SendMoney = () => {
     const [amount, setAmount] = useState(0);
@@ -43,32 +44,17 @@ export const SendMoney = () => {
                 });
 
                 // Register the transaction
-                // await axios.post("http://localhost:3001/api/v1/user/transaction", {
-                //     userId: userIdFromToken,
-                //     amount: amount,
-                //     type: "debit", // The transfer is a debit from the sender's account
-                //     fromAccountId: userIdFromToken, // Sender's account ID
-                //     toAccountId: id // Recipient's account ID
-                // }, {
-                //     headers: {
-                //         Authorization: `Bearer ${token}`,
-                //     },
-                // });
-
                 await axios.post("http://localhost:3001/api/v1/user/transaction", {
-                        amount: amount, // The amount to be transferred
-                        fromAccountId: userIdFromToken, // The sender's account ID
-                        toAccountId: id   // The recipient's account ID
+                    amount: amount, // The amount to be transferred
+                    fromAccountId: userIdFromToken, // The sender's account ID
+                    toAccountId: id   // The recipient's account ID
                 }, {
                     headers: {
                         Authorization: `Bearer ${token}`, // sender's token
                     },
                 });
-                
-                // The backend will handle both the debit and credit transactions
-                
 
-                setUpdate(true);
+                setUpdate(true);  // Trigger the update state after a successful transfer
                 alert("Transfer successful and transaction registered!");
             } else {
                 alert("Insufficient balance.");
@@ -81,27 +67,48 @@ export const SendMoney = () => {
 
     return (
         <>
+         <div className="w-screen h-screen bg-gray-400 grid justify-center items-center">
+            <div className="bg-white p-[10px] rounded-lg shadow-lg">
             <div>
-                <h2>Send Money</h2>
+                <Heading label={"Send Money"} />
             </div>
             <div>
-                <div>
-                    <span>{name[0].toUpperCase()}</span>
+                <div className="font-bold italic text-lg">
+                    <span className="">{name[0].toUpperCase()}</span>
                 </div>
-                <h3>{name}</h3>
+                <h3 className="italic">{name}</h3>
             </div>
-            <div>
-                <label htmlFor="amount">Amount (in RS.)</label>
-                <input type="number" id="amount" name="amount" onChange={e => setAmount(Number(e.target.value))} />
-                <button onClick={handleTransfer}>Initiate Transfer</button>
+            <div className="my-4">
+                <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
+                    Amount (in RS.)
+                </label>
+                <input 
+                    type="number" 
+                    id="amount" 
+                    name="amount" 
+                    className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    onChange={e => setAmount(Number(e.target.value))} 
+                />
             </div>
-            <div>
-            {update ? (
-                <Button onClick={() => navigate("/dashboard")} label={"BACK"} />
-                ) : (
-                <div></div>
+            <div className="my-4">
+                <button 
+                    onClick={handleTransfer} 
+                    className="w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                >
+                    Initiate Transfer
+                </button>
+            </div>
+            <div className="my-4">
+                {update && (
+                    <Button 
+                        onClick={() => navigate("/dashboard")} 
+                        label={"BACK"} 
+                        className="w-full px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                    />
                 )}
             </div>
+            </div>
+        </div>
         </>
     );
 };
